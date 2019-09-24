@@ -5,7 +5,6 @@ import "./menu-item.styles.scss";
 import { withRouter } from "react-router-dom";
 
 function MenuItem(props) {
-  console.log(props);
   const { title, imageUrl, size, linkUrl } = props.section;
   const { history, match } = props;
   return (
