@@ -7,22 +7,42 @@ import Header from "./components/header/header.component";
 
 import { Switch, Route } from "react-router-dom";
 
-function HatsComponent() {
-  return <h1>Perrito</h1>;
-}
+import { auth } from "./firebase/firebase.utils";
 
-function App() {
-  return (
-    <div>
-      <Header />
-      <Switch>
-        <Route exact path="/" component={HomePage}></Route>
-        <Route exact path="/hats" component={HatsComponent}></Route>
-        <Route exact path="/shop" component={ShopPage}></Route>
-        <Route exact path="/signin" component={SignInAndSignUpPage}></Route>
-      </Switch>
-    </div>
-  );
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      currentUser: null
+    };
+  }
+
+  unsubscribeFirebaseAuth = null;
+
+  componentDidMount() {
+    //nos suscribimos para saber todo lo que pase con el usuario, si inicio sesión en otro lado o si cerro sesión
+    this.unsubscribeFirebaseAuth = auth.onAuthStateChanged(user => {
+      this.setState({ currentUser: user });
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFirebaseAuth();
+  }
+
+  render() {
+    return (
+      <div>
+        <Header currentUser={this.state.currentUser} />
+        <Switch>
+          <Route exact path="/" component={HomePage}></Route>
+          <Route exact path="/hats"></Route>
+          <Route exact path="/shop" component={ShopPage}></Route>
+          <Route exact path="/signin" component={SignInAndSignUpPage}></Route>
+        </Switch>
+      </div>
+    );
+  }
 }
 
 export default App;
